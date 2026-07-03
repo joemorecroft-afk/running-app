@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { resolveActiveAthleteId } from "@/lib/auth/activeAthlete";
 import { buildSnapshot } from "@/lib/running/snapshot";
-import { FitnessTriangle } from "@/components/triangle/FitnessTriangle";
+import { InteractiveFitnessTriangle } from "@/components/triangle/InteractiveFitnessTriangle";
 
 export default async function HomePage() {
   const athleteId = await resolveActiveAthleteId();
@@ -16,7 +16,7 @@ export default async function HomePage() {
 
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-6 p-8">
-      <FitnessTriangle
+      <InteractiveFitnessTriangle
         volumeScore={snapshot.volumeScore}
         intensityScore={snapshot.intensityScore}
         injuryRiskScore={snapshot.acwr.riskScore}
