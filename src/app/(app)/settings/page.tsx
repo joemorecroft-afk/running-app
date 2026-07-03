@@ -3,6 +3,7 @@ import { getAthlete } from "@/lib/running/snapshot";
 import { OverrideForm } from "@/components/settings/OverrideForm";
 import { AddAthleteForm } from "@/components/settings/AddAthleteForm";
 import { StravaConnectButton } from "@/components/settings/StravaConnectButton";
+import { SyncButton } from "@/components/settings/SyncButton";
 
 export default async function SettingsPage({
   searchParams,
@@ -32,6 +33,7 @@ export default async function SettingsPage({
       )}
 
       <StravaConnectButton connected={Boolean(athlete.strava_athlete_id)} />
+      {athlete.strava_athlete_id && <SyncButton />}
 
       <OverrideForm athlete={athlete} />
       <div className="flex w-full max-w-sm flex-col gap-2 border-t border-neutral-100 pt-6">

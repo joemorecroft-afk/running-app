@@ -124,9 +124,13 @@ async function seedActivitiesForAthlete(athleteId) {
     rows.push(...buildWeekActivities(athleteId, weekStart, w, WEEKS));
   }
 
-  const { error } = await supabase.from("activities").insert(rows);
+  // Never seed activities in the future — the current week's later days (e.g. Sunday, if
+  // today is only Wednesday) haven't happened yet.
+  const notInFuture = rows.filter((r) => new Date(r.start_date).getTime() <= Date.now());
+
+  const { error } = await supabase.from("activities").insert(notInFuture);
   if (error) throw error;
-  console.log(`  Inserted ${rows.length} activities.`);
+  console.log(`  Inserted ${notInFuture.length} activities.`);
 }
 
 async function main() {
