@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "generate-token": "node --env-file=.env.local scripts/generate-access-token.mjs"
+    "generate-token": "node --env-file=.env.local scripts/generate-access-token.mjs",
+    "seed": "node --env-file=.env.local scripts/seed-fake-activities.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.0",
