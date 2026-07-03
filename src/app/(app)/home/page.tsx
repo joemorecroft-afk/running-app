@@ -1,23 +1,31 @@
+import { redirect } from "next/navigation";
+import { resolveActiveAthleteId } from "@/lib/auth/activeAthlete";
+import { buildSnapshot } from "@/lib/running/snapshot";
 import { FitnessTriangle } from "@/components/triangle/FitnessTriangle";
 
-// Hard-coded fake data for now — real data wiring lands once Supabase + Strava sync exist.
-const FAKE_VOLUME_SCORE = 0.72;
-const FAKE_INTENSITY_SCORE = 1.05;
-const FAKE_INJURY_RISK_SCORE = 62;
+export default async function HomePage() {
+  const athleteId = await resolveActiveAthleteId();
+  if (!athleteId) {
+    redirect("/settings");
+  }
 
-export default function HomePage() {
+  const snapshot = await buildSnapshot(athleteId);
+  const biggestGap = [...snapshot.gaps].sort(
+    (a, b) => Math.abs(b.percentDelta ?? 0) - Math.abs(a.percentDelta ?? 0)
+  )[0];
+
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-6 p-8">
       <FitnessTriangle
-        volumeScore={FAKE_VOLUME_SCORE}
-        intensityScore={FAKE_INTENSITY_SCORE}
-        injuryRiskScore={FAKE_INJURY_RISK_SCORE}
+        volumeScore={snapshot.volumeScore}
+        intensityScore={snapshot.intensityScore}
+        injuryRiskScore={snapshot.acwr.riskScore}
       />
       <div className="text-center">
-        <p className="text-sm font-medium text-neutral-700">Injury risk: 62 / 100</p>
-        <p className="text-xs text-neutral-400">
-          Volume is the limiter this week — ceiling (VO2max/LT2) is ahead of target.
+        <p className="text-sm font-medium text-neutral-700">
+          Injury risk: {Math.round(snapshot.acwr.riskScore)} / 100 ({snapshot.acwr.zone})
         </p>
+        <p className="text-xs text-neutral-400">{biggestGap?.read}</p>
       </div>
     </main>
   );

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { isValidToken, setSessionToken, getSessionToken } from "@/lib/auth/token";
+import { isValidToken, getSessionToken } from "@/lib/auth/token";
 
 export default async function EntryPage({
   searchParams,
@@ -9,11 +9,8 @@ export default async function EntryPage({
   const { token: paramToken } = await searchParams;
 
   if (paramToken) {
-    if (await isValidToken(paramToken)) {
-      await setSessionToken(paramToken);
-      redirect("/home");
-    }
-    redirect("/no-access");
+    // Cookies can only be set from a Route Handler, not a Server Component — hand off there.
+    redirect(`/api/auth/enter?token=${encodeURIComponent(paramToken)}`);
   }
 
   const sessionToken = await getSessionToken();

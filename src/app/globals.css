@@ -12,12 +12,8 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* Deliberately no dark-mode auto-switch: the brief calls for a light, minimalist,
+   lots-of-white-space look where the injury-risk gradient is the only strong color. */
 
 body {
   background: var(--background);
