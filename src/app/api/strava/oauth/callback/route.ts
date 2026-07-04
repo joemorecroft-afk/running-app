@@ -61,5 +61,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL("/settings?strava=error", request.url));
   }
 
+  // Placeholder/seed activities (no strava_id) exist only to demo the app before real data
+  // is connected — once an athlete connects Strava, purge them so they don't get counted
+  // alongside real activities in volume/ACWR/hard-effort calculations.
+  await supabase.from("activities").delete().eq("athlete_id", athleteId).is("strava_id", null);
+
   return NextResponse.redirect(new URL("/settings?strava=connected", request.url));
 }
